@@ -18,8 +18,7 @@ func GraphicHandler(metric []repository.Raw, service string, log zerolog.Logger)
 				AssetsHost: "https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/",
 			}),
 			charts.WithTitleOpts(opts.Title{
-				Title:    "Tracing: " + service,
-				Subtitle: "Stable of stage",
+				Title: "Tracing: " + service,
 			}),
 			charts.WithTooltipOpts(opts.Tooltip{
 				Show: opts.Bool(true),
