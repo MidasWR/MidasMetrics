@@ -2,7 +2,6 @@ package grafics
 
 import (
 	"MidasMetrics/repository"
-	"fmt"
 	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/opts"
 	"github.com/rs/zerolog"
@@ -37,7 +36,6 @@ func GraphicHandler(metric []repository.Raw, service string, log zerolog.Logger)
 
 		var xAxis []string
 		var yAxis []opts.LineData
-		fmt.Printf("len of metric %d\n", len(metric))
 		for _, m := range metric {
 			xAxis = append(xAxis, m.Timestamp.Format("2006-01-02 15:04:05"))
 			stageInt := int(m.Stage)
