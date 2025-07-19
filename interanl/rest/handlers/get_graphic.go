@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"MidasMetrics/interanl/application/db_request"
-	"MidasMetrics/interanl/rest/handlers/grafics"
+	clickhouse2 "MidasMetrics/interanl/application/db_request/clickhouse"
+	"MidasMetrics/interanl/rest/handlers/view"
 	"errors"
 	"github.com/ClickHouse/clickhouse-go/v2"
 	"github.com/rs/zerolog"
@@ -20,14 +20,14 @@ func GetGraphicHandler(log zerolog.Logger, conn clickhouse.Conn) http.HandlerFun
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		metrics, err := db_request.GetMetrics(conn, service, start, end)
+		metrics, err := clickhouse2.GetMetrics(conn, service, start, end)
 		if err != nil {
 			log.Error().Msgf("get from db failed: %v", err)
 			w.Write([]byte(errors.New("error select from db").Error()))
 			w.WriteHeader(http.StatusInsufficientStorage)
 			return
 		}
-		next := grafics.GraphicHandler(metrics, service, log)
+		next := view.GraphicHandler(metrics, service, log)
 		next.ServeHTTP(w, r)
 	}
 }

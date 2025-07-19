@@ -1,4 +1,4 @@
-package db_request
+package clickhouse
 
 import (
 	"MidasMetrics/repository"

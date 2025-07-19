@@ -1,9 +1,8 @@
-package db_request
+package clickhouse
 
 import (
 	"MidasMetrics/repository"
 	"context"
-	"fmt"
 	"github.com/ClickHouse/clickhouse-go/v2"
 	"github.com/rs/zerolog"
 	"strconv"
@@ -36,7 +35,7 @@ func InsertMetricFunc(conn clickhouse.Conn, log zerolog.Logger, ctx context.Cont
 	for {
 		select {
 		case data := <-BI.Ch:
-			parsedTime, err := time.Parse("02.01.2006 15:04", data.Timestamp)
+			parsedTime, err := time.Parse("02.01.2006 15:04:05", data.Timestamp)
 			if err != nil {
 				log.Error().Err(err).Msg("cant parsing timestamp")
 				continue
@@ -47,7 +46,6 @@ func InsertMetricFunc(conn clickhouse.Conn, log zerolog.Logger, ctx context.Cont
 				log.Error().Err(err).Msg("cant parsing stage")
 				continue
 			}
-			fmt.Println(data.TraceID, data.Timestamp, data.Service, data.Stage)
 			if err := batch.Append(data.TraceID, parsedTime, data.Service, uint8(stageVal)); err != nil {
 				log.Error().Err(err).Msg("error appending to batch")
 			}

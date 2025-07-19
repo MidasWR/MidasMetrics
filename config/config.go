@@ -8,11 +8,13 @@ import (
 type Config struct {
 	Port       string
 	Host       string
-	DBHost     string
-	DBPort     string
-	DBUser     string
-	DBPassword string
-	DBHandler  string
+	CHHost     string
+	CHPort     string
+	CHUser     string
+	CHPassword string
+	CHHandler  string
+	CSHost     string
+	CSPort     string
 }
 
 func NewConfig() (*Config, error) {
@@ -23,10 +25,12 @@ func NewConfig() (*Config, error) {
 	return &Config{
 		Port:       os.Getenv("PORT"),
 		Host:       os.Getenv("HOST"),
-		DBHost:     os.Getenv("DB_HOST"),
-		DBPort:     os.Getenv("DB_PORT"),
-		DBUser:     os.Getenv("DB_USER"),
-		DBPassword: os.Getenv("DB_PASSWORD"),
-		DBHandler:  os.Getenv("DB_HANDLER"),
+		CHHost:     os.Getenv("CH_HOST"),
+		CHPort:     os.Getenv("CH_PORT"),
+		CHUser:     os.Getenv("CH_USER"),
+		CHPassword: os.Getenv("CH_PASSWORD"),
+		CHHandler:  os.Getenv("CH_HANDLER"),
+		CSHost:     os.Getenv("CS_HOST"),
+		CSPort:     os.Getenv("CS_PORT"),
 	}, err
 }

@@ -14,3 +14,8 @@ type Raw struct {
 	Service   string
 	Stage     uint8
 }
+type Stats struct {
+	Service string
+	Stage   int
+	Count   int
+}

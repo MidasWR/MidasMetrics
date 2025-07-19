@@ -2,7 +2,7 @@ package main
 
 import (
 	"MidasMetrics/config"
-	"MidasMetrics/interanl/application/db_request"
+	"MidasMetrics/interanl/application/db_request/clickhouse"
 	"MidasMetrics/interanl/rest"
 	"MidasMetrics/repository"
 	"context"
@@ -13,7 +13,7 @@ import (
 
 func main() {
 	log := midas.InitLogger(midas.LoggerConfig{
-		LogLevel: "DEV",
+		LogLevel: "PROD",
 		Out:      os.Stdout,
 	}, "Metrics")
 	cfg, err := config.NewConfig()
@@ -30,10 +30,12 @@ func main() {
 	)
 }
 func Start(cfg config.Config, logger zerolog.Logger) error {
-	st := repository.Storage{}
-	st.InitStorage(cfg, logger)
+	stch := repository.StorageCH{}
+	stcs := repository.StorageCS{}
+	stch.Init(cfg, logger)
+	stcs.Init(cfg, logger)
 	srv := rest.InitServer(cfg)
-	go db_request.InsertMetricFunc(st.Conn, logger, context.Background())
-	srv.Run(logger, st.Conn)
+	go clickhouse.InsertMetricFunc(stch.Conn, logger, context.Background())
+	srv.Run(logger, stch.Conn, stcs.Conn)
 	return nil
 }

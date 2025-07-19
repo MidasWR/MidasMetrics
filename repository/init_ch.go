@@ -9,20 +9,20 @@ import (
 	"time"
 )
 
-type Storage struct {
+type StorageCH struct {
 	Conn clickhouse.Conn
 }
 
-func (s *Storage) InitStorage(cfg config.Config, log zerolog.Logger) {
+func (s *StorageCH) Init(cfg config.Config, log zerolog.Logger) {
 	var addr []string
 	var err error
-	addr = append(addr, cfg.DBHost+":"+cfg.DBPort)
+	addr = append(addr, cfg.CHHost+":"+cfg.CHPort)
 	s.Conn, err = clickhouse.Open(&clickhouse.Options{
 		Addr: addr,
 		Auth: clickhouse.Auth{
-			Database: cfg.DBHandler,
+			Database: cfg.CHHandler,
 			Username: "default",
-			Password: cfg.DBPassword,
+			Password: cfg.CHPassword,
 		},
 		DialContext: func(ctx context.Context, addr string) (net.Conn, error) {
 			var d net.Dialer
@@ -52,14 +52,14 @@ func (s *Storage) InitStorage(cfg config.Config, log zerolog.Logger) {
 		},
 	})
 	if err != nil {
-		log.Fatal().Err(err).Msgf("error connecting to database on port %s", cfg.DBPort)
+		log.Fatal().Err(err).Msgf("error connecting to database on port %s", cfg.CHPort)
 	}
 	defer func() {
 		if err := s.Conn.Close(); err != nil {
 			log.Error().Err(err).Msg("error closing ClickHouse connection")
 		}
 	}()
-	log.Info().Msgf("connected to database on port %s", cfg.DBPort)
+	log.Info().Msgf("connected to database on port %s", cfg.CHPort)
 	q := `
 		CREATE TABLE IF NOT EXISTS metrics (
 		trace_id String,

@@ -1,4 +1,4 @@
-package grafics
+package view
 
 import (
 	"MidasMetrics/repository"
